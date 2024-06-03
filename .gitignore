@@ -1,0 +1,7 @@
+.pytest_cache
+__pycache__
+.idea
+.env
+.ruff_cache
+staticfiles/
+media/

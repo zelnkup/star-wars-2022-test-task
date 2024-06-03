@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div>
+  <form method="get" action="{{ object.file.url }}">
+    <button type="submit" class="btn btn-success">Download file!</button>
+  </form>
+</div>
+<br>
+<div class="container">
+  {% for button in buttons %}
+  <button class="btn btn-primary" onclick="addOrRemoveParameter()" id="{{button}}">
+    {{ button }}
+  </button>
+  {% endfor %}
+
+</div>
+<br>
+<div class="justify-content-center">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      {% for header in headers %}
+      <th scope="col">{{ header }}</th>
+      {% endfor %}
+    </tr>
+
+    </thead>
+    <tbody>
+    {% for character in characters %}
+
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      {% for sub_char in character %}
+      <td>{{ sub_char }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<a href="{{ request.path }}?size={{ size }}" style="all: unset;">
+  <button class="btn btn-primary">Load more</button>
+</a>
+
+{% endblock %}
+{% block js_code %}
+<script>
+  function addOrRemoveParameter() {
+    var paramValue = $(event.target).attr('id');
+    var paramName = 'aggregation';
+    var currentUrl = window.location.href;
+    var newUrl = new URL(currentUrl);
+
+
+    if (newUrl.searchParams.has(paramName)) {
+      var currentValues = newUrl.searchParams.get(paramName);
+
+      var valuesArray = currentValues.split(',');
+
+      var exists = valuesArray.includes(paramValue);
+
+      if (exists) {
+        var updatedValues = valuesArray.filter(value => value !== paramValue);
+
+        var updatedValueString = updatedValues.join(',');
+
+        if (updatedValues.length > 0) {
+          newUrl.searchParams.set(paramName, updatedValueString);
+        } else {
+          newUrl.searchParams.delete(paramName);
+        }
+      } else {
+        var updatedValueString = currentValues + (currentValues ? ',' : '') + paramValue;
+
+        newUrl.searchParams.set(paramName, updatedValueString);
+      }
+    } else {
+      newUrl.searchParams.append(paramName, paramValue);
+    }
+    window.location.href = newUrl.href;
+
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+  <h1>Collections</h1>
+
+  <button class="btn btn-primary"><a href="{% url 'generate-csv' %}" style="all: unset;">Fetch new collection</a></button>
+</div>
+<br>
+
+<div class="content">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th scope="col" style="width: 20px">#</th>
+      <th scope="col">Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for obj in object_list %}
+    <tr>
+      <th scope="row">{{ obj.id }}</th>
+      <td><a href="{% url 'character-detail' obj.id %}">{{ obj.created_at }}</a></td>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

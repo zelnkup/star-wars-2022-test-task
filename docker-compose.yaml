@@ -1,0 +1,19 @@
+version: '3'
+
+
+services:
+  db:
+    image: postgres:14
+    env_file:
+      - .env.postgres
+  backend:
+    build: .
+    command: bash -c "python manage.py migrate && uvicorn config.asgi:application --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
